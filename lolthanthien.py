@@ -54,7 +54,6 @@ def getProfile(accountToken):
             'Referer': 'https://bargain.lol.garena.vn/?token=' + accountToken
         }
     )
-
     return res.json()
 
 def redeem(accountToken):

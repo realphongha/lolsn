@@ -1,4 +1,4 @@
-import requests, os, re, subprocess, ctypes, sys
+import requests, os, re, subprocess, ctypes, sys, traceback
 from random import shuffle
  
 def isAdmin():
@@ -36,7 +36,8 @@ def useCode(code, accountToken):
         #proxies = {'https': 'http://localhost:8888'},
         #verify = False
     )
-
+    if "bad gateway" in res.content.lower():
+        return False
     return res.json()
 
 if __name__ == '__main__':
@@ -56,16 +57,20 @@ if __name__ == '__main__':
         print('Your token: ', token)
 
         for code in codes:
-            print(code)
-            
-            res = useCode(code, token)
+            print("------------------------------\n", code)
+            try:
+                res = useCode(code, token)
+                if not res:
+                    print("Error: Bad Gateway")
+                    continue
 
-            print(res)
-
-            if 'error' in res and res['error'] == 'ERROR__ENTER_CODE_AMOUNT_OUT_OF_QUOTA':
-                print('You reached code input limit')
-                break
+                print("Result:", res)
+                if 'error' in res and res['error'] == 'ERROR__ENTER_CODE_AMOUNT_OUT_OF_QUOTA':
+                    print('You reached code input limit')
+                    break
+            except Exception as e:
+                print(traceback.format_exc())
     except Exception as e:
-        print(e)
+        print(traceback.format_exc())
     finally:
         input()
