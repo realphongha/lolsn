@@ -36,7 +36,7 @@ def useCode(code, accountToken):
         #proxies = {'https': 'http://localhost:8888'},
         #verify = False
     )
-    if "bad gateway" in res.content.lower():
+    if "bad gateway" in str(res.content).lower():
         return False
     return res.json()
 
